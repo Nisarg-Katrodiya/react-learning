@@ -1,10 +1,10 @@
 import React, { useContext } from 'react';
 import { Link, Route, Routes } from 'react-router-dom';
-import PrivateRoute from './routes/privateRoutes';
 import { AuthContext } from './authProvider';
 import LoginPage from './pages/auth/login';
 import RadioButtons from './pages/colorBox';
 import Search from './pages/search';
+import UserList from './pages/userList';
 
 const App: React.FC = () => {
   const { isAuthenticated, logout } = useContext(AuthContext);
@@ -15,39 +15,43 @@ const App: React.FC = () => {
 
   return (
     <div>
-      <nav>
-        <ul>
-          <li>
-            <Link to="/">Home</Link>
-          </li>
-          <li>
-            <Link to="/search">Search</Link>
-          </li>
-          <li>
-            <Link to="/radio-buttons">Radio Buttons</Link>
-          </li>
-          {isAuthenticated && (
-            <li>
-              <button onClick={handleLogout}>Log out</button>
-            </li>
-          )}
-        </ul>
-      </nav>
+      {isAuthenticated && (
+        <nav style={{ backgroundColor: '#333', padding: '0.8rem' }}>
+          <ul style={{ display: 'flex', justifyContent: 'space-between', listStyleType: 'none' }}>
+              <>
+                <li style={{ marginRight: '1rem' }}>
+                  <Link to="/search" style={{ color: 'white', textDecoration: 'none' }}>
+                    Search
+                  </Link>
+                </li>
+                <li style={{ marginRight: '1rem' }}>
+                  <Link to="/radio-buttons" style={{ color: 'white', textDecoration: 'none' }}>
+                    Radio Buttons
+                  </Link>
+                </li>
+                <li style={{ marginRight: '1rem' }}>
+                  <Link to="/user-list" style={{ color: 'white', textDecoration: 'none' }}>
+                    User List
+                  </Link>
+                </li>
+                <li>
+                  <button onClick={handleLogout} style={{ backgroundColor: 'transparent', color: 'white', border: '1px solid white', padding: '0.5rem' }}>
+                    Log Out
+                  </button>
+                </li>
+              </>
+          </ul>
+        </nav>
+      )}
       <Routes>
-        <Route path="/" element={<h2>Home Page</h2>} />
-        <Route path="/login" element={<LoginPage />} />
-        {/* <PrivateRoute
-          path="/search"
-          element={<Search />}
-          isAuthenticated={isAuthenticated}
-          redirectPath="/login"
-        />
-        <PrivateRoute
-          path="/radio-buttons"
-          element={<RadioButtons />}
-          isAuthenticated={isAuthenticated}
-          redirectPath="/login"
-        /> */}
+        { isAuthenticated ? (
+          <>
+            <Route path="/" element={<h2>Home Page</h2>} />
+            <Route path="/search" element={<Search />} />
+            <Route path="/radio-buttons" element={<RadioButtons />} />
+            <Route path="/user-list" element={<UserList />} />
+          </>
+        ) : <Route path="/login" element={<LoginPage />} />}
       </Routes>
     </div>
   );

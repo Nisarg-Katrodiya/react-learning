@@ -1,4 +1,5 @@
-import React, { createContext, useState } from 'react';
+import React, { createContext, useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 interface AuthContextType {
   isAuthenticated: boolean;
@@ -17,15 +18,23 @@ interface Props {
 }
 
 const AuthProvider: React.FC<Props> = ({ children }) => {
+  const navigate = useNavigate();
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
-  console.log("🚀 ~ file: authProvider.tsx:21 ~ isAuthenticated:", isAuthenticated)
+
+  useEffect(() => {
+    if(!isAuthenticated) {
+      navigate('/login');
+    }
+  }, [])
 
   const login = () => {
     setIsAuthenticated(true);
+    navigate('/');
   };
 
   const logout = () => {
     setIsAuthenticated(false);
+    navigate('/login');
   };
 
   const authContextValue: AuthContextType = {
