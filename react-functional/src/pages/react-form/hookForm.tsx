@@ -8,6 +8,7 @@ interface FormInputs {
   email: string;
   phone: string;
   address: string;
+  country: string;
 }
 
 const schema = yup.object().shape({
@@ -55,6 +56,19 @@ const HookForm: React.FC = () => {
           <label htmlFor="address">Address</label>
           <input type="text" id="address" {...register("address")} />
           {errors.address && <span>{errors.address.message}</span>}
+        </div>
+        <div>
+          <label htmlFor="country">Country</label>
+          <select id="country" {...register("country")}>
+            <option value="">Select a country</option>
+            <option value="india">India</option>
+            <option value="usa">USA</option>
+            <option value="canada">Canada</option>
+            <option value="uk">UK</option>
+          </select>
+          {errors.country && (
+            <span>{errors.country.message}</span>
+          )}
         </div>
         <button type="submit">Submit</button>
       </form>
