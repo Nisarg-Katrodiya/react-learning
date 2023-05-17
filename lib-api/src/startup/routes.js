@@ -3,8 +3,8 @@ module.exports = (app) => {
   // define a root/default route
   app.get("/", (req, res) => {
     res.json({
-      message: "Hello there!! These are Kabra TS APIs",
-      api_helth: "good",
+      message: "Hello there!! These are lib TS APIs",
+      api_heath: "good",
       api_version: "V1.0.0",
     });
   });
