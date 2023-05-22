@@ -2,6 +2,7 @@ import {Container} from '@mui/material';
 import { makeStyles } from '@mui/styles';
 
 import Navbar from "../../Navigation/Navbar";
+import Dashboard from "./DashboardLayout";
 
 const useStyles = makeStyles((theme: any) => ({
   appBarSpacer: theme.mixins.toolbar,
@@ -18,15 +19,25 @@ const useStyles = makeStyles((theme: any) => ({
 
 const MainLayout = ({children}: any)  => {
   const classes = useStyles();
+  const address = ["/login", "/register"].includes(window.location.pathname);
 	return (
 		<>
-      <Navbar />
-			<main className={classes.content}>
-        {/* <div className={classes.appBarSpacer} /> */}
-        <Container maxWidth="lg" className={classes.container}>
-          {children}
-        </Container>
-      </main>
+      { address ? (
+        <>
+          <Navbar />
+          <main className={classes.content}>
+            {/* <div className={classes.appBarSpacer} /> */}
+            <Container maxWidth="lg" className={classes.container}>
+              {children}
+            </Container>
+          </main>
+        </>
+        ) : (
+          <Dashboard>
+            {children}
+          </Dashboard>
+        )
+      }
 		</>
 	);
 };

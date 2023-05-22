@@ -9,5 +9,5 @@ Logo.propTypes = {
 
 export default function Logo({ sx }: any) {
   const navigate = useNavigate();
-  return <Box component="img" src="/assets/logo.png" onClick={() => navigate('/')} sx={{ width: 80, height: 80, ...sx }} style={{zIndex: 999}} />;
+  return <Box component="img" src="/assets/logo.png" onClick={() => navigate('/')} sx={{ width: 50, height: 50, ...sx }} style={{zIndex: 999}} />;
 }

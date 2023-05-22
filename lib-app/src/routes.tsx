@@ -1,9 +1,10 @@
-import Home from './pages/Home';
+// import Home from './pages/Home';
 import LogIn from './pages/LogIn';
 import Register from './pages/Register';
-
-
 import {FC} from "react";
+import Dashboard from './pages/Dashboard';
+import Users from './pages/user';
+import Book from './pages/Book';
 
 type Route = {
 	key: string,
@@ -33,36 +34,22 @@ export const routes: Array<Route> = [
 		title: 'Home',
 		path: '/',
 		enabled: true,
-		component: Home
+		component: Dashboard
 	},
-	// {
-	// 	key: 'cart-route',
-	// 	title: 'Cart',
-	// 	path: '/cart',
-	// 	enabled: true,
-	// 	component: Cart
-	// },
-	// {
-	// 	key: 'product-route',
-	// 	title: 'Products',
-	// 	path: '/products',
-	// 	enabled: true,
-	// 	component: Product
-	// },
-	// {
-	// 	key: 'add-product-route',
-	// 	title: 'Add Product',
-	// 	path: '/add-product',
-	// 	enabled: true,
-	// 	component: ProductPage
-	// },
-	// {
-	// 	key: 'update-product-route',
-	// 	title: 'Update Product',
-	// 	path: '/update-product',
-	// 	enabled: true,
-	// 	component: ProductPage
-	// },
+	{
+		key: 'user-route',
+		title: 'Users',
+		path: '/users',
+		enabled: true,
+		component: Users
+	},
+	{
+		key: 'book-route',
+		title: 'Books',
+		path: '/books',
+		enabled: true,
+		component: Book
+	},
 	// { 
 	// 	key: 'notfound-route',
 	// 	title: 'Not Found',

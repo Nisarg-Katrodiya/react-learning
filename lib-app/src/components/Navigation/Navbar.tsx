@@ -1,5 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-
 import { FC, ReactElement, useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 
@@ -14,20 +12,21 @@ import { routes } from "./NavList";
 import Logo from '../Logo';
 // import { CartButton } from "../Dashboard/Cart";
 // import LogoutButton from "./LogoutButton";
-import { getToken, getUser } from "../../utils/common";
+import { getToken, getUser, removeUserSession } from "../../utils/common";
 
 const Navbar: FC = (): ReactElement => {
   let token = getToken();
-  // eslint-disable-next-line no-unused-vars
   const [navRoutes, setRoutes] = useState(routes);
 
   useEffect(() => {
     filterRoute()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const filterRoute = () => {
     let user = getUser();
     if(!token) {
+      removeUserSession();
       let filteredRoute = navRoutes.filter(data => data.type.includes('auth'));
       setRoutes(filteredRoute);
     } else {

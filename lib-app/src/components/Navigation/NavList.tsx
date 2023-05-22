@@ -20,8 +20,8 @@ export const routes: Array<Route> = [
 	},
 	{
 		key: 'product-route',
-		title: 'Product',
-		path: '/products',
+		title: 'User',
+		path: '/users',
 		type: ['admin']
 	},
 ]

@@ -13,7 +13,7 @@ import { makeStyles } from "@mui/styles";
 
 import {loginUser} from '../../redux/action/user';
 
-const useStyle = makeStyles(() => ({
+const useStyle: any = makeStyles(() => ({
   listStyle: {
     lineHeight: 22 / 14,
     fontSize: '14px',
