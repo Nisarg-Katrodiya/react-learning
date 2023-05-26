@@ -1,17 +1,17 @@
 import { combineReducers } from 'redux';
-// import { persistReducer } from 'redux-persist';
+// import { persistReducer as persistCombineReducers } from 'redux-persist';
+// import storage from 'redux-persist/lib/storage' // defaults to localStorage for web
 
 import { User } from "./User";
 
 // const config = {
 //   key: "primary",
 //   storage,
-//   keyPrefix: 'book-'
 // };
 
 const state = combineReducers({
   User,
 });
 
-// export default persistCombineReducers(config, state);
 export default state;
+// export default persistCombineReducers(config, state);

@@ -4,10 +4,24 @@ import Button from '@mui/material/Button';
 import { useFormik } from "formik";
 import classes from './style';
 
-export default function UserForm(props: any) {
+interface Data {
+  id?: number;
+  name: string;
+  email: string;
+  number: string;
+  role: string;
+  status: string;
+}
+interface PropTypes {
+  editUserData?: Data;
+  addUser: (val: Data) => void;
+  close: () => void;
+}
+
+export default function UserForm({editUserData, addUser, close}: PropTypes) {
 
   const formik = useFormik({
-    initialValues: {
+    initialValues: editUserData ? editUserData : {
       name: '',
       email: '',
       number: '',
@@ -15,8 +29,8 @@ export default function UserForm(props: any) {
       status: '',
     },
     onSubmit: async values => {
-      props.addUser(values);
-      props.close();
+      addUser(!editUserData ? values : {...values, id: editUserData.id});
+      close();
     },
     // validate: values => validate(values),
   });
@@ -99,7 +113,7 @@ export default function UserForm(props: any) {
             variant="contained"
             type="submit"
             sx={classes.loginStyle}>
-            Create User
+            {!editUserData ? "Create User" : "Edit User"}
           </Button>
         </Grid>
       </Grid>

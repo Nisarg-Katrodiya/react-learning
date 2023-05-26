@@ -20,8 +20,6 @@ export async function handleApiError(error: any) {
     throw error;
   }
 
-  console.log(error);
-
   if (!error.response) {
     throw error;
   }
@@ -29,7 +27,6 @@ export async function handleApiError(error: any) {
     throw error;
   } else if (error.response.status === 500) {
     throw error;
-  } else {
   }
   throw error;
 }

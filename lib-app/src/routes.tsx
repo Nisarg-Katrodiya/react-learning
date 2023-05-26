@@ -4,7 +4,7 @@ import Register from './pages/Register';
 import {FC} from "react";
 import Dashboard from './pages/Dashboard';
 import Users from './pages/user';
-import Book from './pages/Book';
+import Book from './pages/book';
 
 type Route = {
 	key: string,

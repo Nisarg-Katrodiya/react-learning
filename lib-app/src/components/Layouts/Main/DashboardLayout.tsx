@@ -12,7 +12,7 @@ import IconButton from '@mui/material/IconButton';
 import Container from '@mui/material/Container';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft'
-import { mainListItems } from '../../Navigation/Sidebar';
+import MainListItems from '../../Navigation/Sidebar';
 import Logo from '../../Logo';
 
 const drawerWidth: number = 240;
@@ -121,7 +121,7 @@ export default function Dashboard({children}: any) {
         </Toolbar>
         <Divider />
         <List component="nav">
-          {mainListItems}
+          <MainListItems />
           {/* <Divider sx={{ my: 1 }} /> */}
         </List>
       </Drawer>
