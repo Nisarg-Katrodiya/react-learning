@@ -1,19 +1,18 @@
-import * as React from 'react';
+import {useEffect} from "react";
+import { useNavigate } from "react-router-dom";
 import { styled } from '@mui/material/styles';
-import CssBaseline from '@mui/material/CssBaseline';
 import MuiDrawer from '@mui/material/Drawer';
 import Box from '@mui/material/Box';
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import List from '@mui/material/List';
 import Typography from '@mui/material/Typography';
-import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import Container from '@mui/material/Container';
-import MenuIcon from '@mui/icons-material/Menu';
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft'
+import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew';
 import MainListItems from '../../Navigation/Sidebar';
 import Logo from '../../Logo';
+import { getToken, removeUserSession } from "../../../utils/common";
 
 const drawerWidth: number = 240;
 
@@ -68,32 +67,28 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 // TODO remove, this demo shouldn't need to reset the theme.
 
 export default function Dashboard({children}: any) {
-  const [open, setOpen] = React.useState(true);
-  const toggleDrawer = () => {
-    setOpen(!open);
+  const navigate = useNavigate();
+  const logOut = () => {
+    removeUserSession();
+    navigate('/login');
   };
+
+  useEffect(() => {
+    const token = getToken();
+    if(!token) {
+      navigate('/login');
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <Box sx={{ display: 'flex' }}>
-      <CssBaseline />
-      <AppBar position="absolute" open={open}>
+      <AppBar position="absolute" open>
         <Toolbar
           sx={{
             pr: '24px', // keep right padding when drawer closed
           }}
         >
-          <IconButton
-            edge="start"
-            color="inherit"
-            aria-label="open drawer"
-            onClick={toggleDrawer}
-            sx={{
-              marginRight: '36px',
-              ...(open && { display: 'none' }),
-            }}
-          >
-            <MenuIcon />
-          </IconButton>
           <Logo />
           <Typography
             component="h1"
@@ -104,23 +99,21 @@ export default function Dashboard({children}: any) {
           >
             Library App
           </Typography>
-        </Toolbar>
-      </AppBar>
-      <Drawer variant="permanent" open={open}>
-        <Toolbar
-          sx={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'flex-end',
-            px: [1],
-          }}
-        >
-          <IconButton onClick={toggleDrawer}>
-            <ChevronLeftIcon />
+          <IconButton
+            edge="end"
+            color="inherit"
+            aria-label="open drawer"
+            onClick={logOut}
+            sx={{
+              marginRight: '36px',
+            }}
+          >
+            <PowerSettingsNewIcon />
           </IconButton>
         </Toolbar>
-        <Divider />
-        <List component="nav">
+      </AppBar>
+      <Drawer variant="permanent" open>
+        <List component="nav" sx={{mt: 8}}>
           <MainListItems />
           {/* <Divider sx={{ my: 1 }} /> */}
         </List>

@@ -8,12 +8,6 @@ export const getUser = () => {
   else return null;
 };
 
-export const getEmail = () => {
-  const userEmail = sessionStorage.getItem("user_email");
-  if (userEmail) return JSON.parse(userEmail);
-  else return null;
-};
-
 export const getData = () => {
   const userData = sessionStorage.getItem("data");
   if (userData) return JSON.parse(userData);
@@ -29,14 +23,10 @@ export const getToken = () => {
 export const removeUserSession = () => {
   sessionStorage.removeItem("token");
   sessionStorage.removeItem('user');
-  sessionStorage.removeItem('user_email');
-  sessionStorage.removeItem('data');
 };
 
 // set the token and user from the session storage
-export const setUserSession = (token: string, user: any, email: string, data: any) => {
+export const setUserSession = (token: string, user?: any) => {
   sessionStorage.setItem("token", token);
   sessionStorage.setItem("user", JSON.stringify(user));
-  sessionStorage.setItem("user_email", JSON.stringify(email));
-  sessionStorage.setItem("data", JSON.stringify(data));
 };

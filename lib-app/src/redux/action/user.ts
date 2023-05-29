@@ -12,6 +12,7 @@ import {
   LOGIN_USER_ERROR
 } from "../../constant/constant";
 import { getDataFromSession, setDataToSession } from "../../utils/localstorage";
+import { setUserSession } from "../../utils/common";
 
 type userDataType = {
   id?: number;
@@ -76,10 +77,12 @@ export const loginUser = (params: loginDataType) => async(dispatch: any) =>
     const getUserList = getDataFromSession('users');
     const index: number = getUserList.findIndex((user: any) => user.email === params.email && user.password === params.password);
     if (index > -1) {
+      if(!getUserList[index].token) dispatch(loginFailure("Fail to Login User"));
       dispatch(loginSuccess(getUserList[index]));
-        resolve(getUserList[index]);
+      setUserSession("eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOnsidXNlcl9mbmFtZSI6IlVzZXIiLCJ1c2VyX2VtYWlsIjoidXNlci50ZXN0MTJAZ21haWwuY29tIn19.JVktU8rU4gH0yTmT0G_XGvPBeoPbr-DwNTd6_R0as8s", getUserList[index])
+      resolve(getUserList[index]);
     } else {
-      dispatch(loginFailure("Fail to Create User"));
+      dispatch(loginFailure("Fail to Login User"));
       reject();
     }
   });
