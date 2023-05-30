@@ -147,7 +147,6 @@ function EnhancedTableToolbar() {
 export default function EnhancedTable({userList, setUpdateData, handleDeleteUser}: any) {
   const [order, setOrder] = React.useState<Order>('asc');
   const [orderBy, setOrderBy] = React.useState<keyof Data>('email');
-  const [selected, setSelected] = React.useState<readonly string[]>([]);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
@@ -155,26 +154,6 @@ export default function EnhancedTable({userList, setUpdateData, handleDeleteUser
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
     setOrderBy(property);
-  };
-
-  const handleClick = (event: React.MouseEvent<unknown>, name: string) => {
-    const selectedIndex = selected.indexOf(name);
-    let newSelected: readonly string[] = [];
-
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1),
-      );
-    }
-
-    setSelected(newSelected);
   };
 
   const handleChangePage = (event: unknown, newPage: number) => {
@@ -185,8 +164,6 @@ export default function EnhancedTable({userList, setUpdateData, handleDeleteUser
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
-
-  const isSelected = (name: string) => selected.indexOf(name) !== -1;
 
   // Avoid a layout jump when reaching the last page with empty userList.
   const emptyRows =
@@ -216,18 +193,11 @@ export default function EnhancedTable({userList, setUpdateData, handleDeleteUser
             />
             <TableBody>
               {userList.map((row: Data, index: number) => {
-                const isItemSelected = isSelected(row.name);
                 const labelId = `enhanced-table-checkbox-${index}`;
                 return (
                   <TableRow
-                    hover
-                    onClick={(event) => handleClick(event, row.name)}
-                    role="checkbox"
-                    aria-checked={isItemSelected}
                     tabIndex={-1}
                     key={row.email + index}
-                    // selected={isItemSelected}
-                    sx={{ cursor: 'pointer' }}
                   >
                     <TableCell
                       component="th"

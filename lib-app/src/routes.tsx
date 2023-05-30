@@ -5,6 +5,7 @@ import {FC} from "react";
 import Dashboard from './pages/Dashboard';
 import Users from './pages/user';
 import Book from './pages/book';
+import Assign from './pages/assignBook';
 
 type Route = {
 	key: string,
@@ -49,6 +50,13 @@ export const routes: Array<Route> = [
 		path: '/books',
 		enabled: true,
 		component: Book
+	},
+	{
+		key: 'assign-book',
+		title: 'Assign Book',
+		path: '/assign-book',
+		enabled: true,
+		component: Assign
 	},
 	// { 
 	// 	key: 'notfound-route',

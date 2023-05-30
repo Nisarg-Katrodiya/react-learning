@@ -3,6 +3,7 @@ import {Button, Stack, Box, Modal, Typography, AppBar} from '@mui/material';
 import AssignedAssignTable from './assignList';
 import AssignForm from './assignForm';
 import styles from './style';
+// import { useLocation } from 'react-router-dom';
 
 interface AssignData {
   id: number;
@@ -15,11 +16,12 @@ interface AssignData {
   status?: string;
 }
 const rows: AssignData[] = [
-  {id: 1, name: 'test user', author: 'author X', quantity: 2, userName: 'User1', assignDate: '0998973815', returnDate: '826726745678', status: 'assigned'},
-  {id: 2, name: 'donut drum', author: 'author Y', quantity: 1 , userName: 'user2', assignDate: '0998973815', returnDate: '826726745678', status: 'assigned'},
+  {id: 1, name: 'Dummy book1', author: 'author X', quantity: 2, userName: 'Dummy User1', assignDate: '0998973815', returnDate: '826726745678', status: 'assigned'},
+  {id: 2, name: 'Dummy book2', author: 'author Y', quantity: 1 , userName: 'Dummy user2', assignDate: '0998973815', returnDate: '826726745678', status: 'return'},
 ];
 
 function Assign() {
+  // const {state} = useLocation();
   const [assignList, setAssignList] = useState<AssignData[]>(rows);
   const [assignEdit, setEditAssign] = useState<AssignData>();
   const [open, setOpen] = useState(false);
@@ -35,7 +37,7 @@ function Assign() {
     }
     setEditAssign(undefined);
   }
-  const handleReturnAssign = (val: number) => 
+  const handleReturn = (val: number) => 
     setAssignList((prev: AssignData[]) => prev.filter((data: AssignData) => data.id !== val));
   const handleEditAssign = (val: AssignData) => {
     setEditAssign(val);
@@ -44,12 +46,12 @@ function Assign() {
   return (
     <>
       <Stack direction="row" spacing={2} justifyContent="flex-end" sx={{my: 2}}>
-        <Button variant="contained" onClick={handleModel}>Create Assign</Button>
+        <Button variant="contained" onClick={handleModel}>Assign</Button>
       </Stack>
       <AssignedAssignTable 
         assignList={assignList}
         setUpdateData={(val: AssignData) => handleEditAssign(val)}
-        handleDeleteAssign={(id: number) => handleReturnAssign(id)}
+        handleDeleteAssign={(id: number) => handleReturn(id)}
       />
       <Modal
         open={open}

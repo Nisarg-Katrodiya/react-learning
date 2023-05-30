@@ -16,7 +16,7 @@ export default function NavSection({ routes }: propsType) {
   const userData = getDataFromSession('currentUser');
   return (
     <Routes>
-      {routes.filter((route)=> userData.role === 'student' ? route.key != 'user-route' : route).map((route) => {
+      {routes?.filter((route)=> userData?.role === 'student' ? route?.key != 'user-route' : route).map((route) => {
         return (
           <Route
             key={route.key}
