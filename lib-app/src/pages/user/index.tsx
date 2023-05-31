@@ -42,10 +42,10 @@ function User() {
       userList.splice(index, 1, val);
       setUserList(userList);
     } else {
-      setUserList([...userList, {...val, id: userList.length}]);
+      setUserList([...userList, {...val, id: userList.length, parentUser: userData.id }]);
     }
     setEditUser(undefined);
-    await dispatch(createUser({...val, parentUser: userData.id }));
+    await dispatch(createUser({...val, id: userList.length, parentUser: userData.id }));
   }
   const handleDeleteUser = (val: number) => 
     setUserList((prev: Data[]) => prev.filter((data: Data) => data.id !== val));

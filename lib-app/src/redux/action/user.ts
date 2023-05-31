@@ -4,6 +4,9 @@ import {
   GET_USER_REQUEST,
   GET_USER_SUCCESS,
   GET_USER_ERROR,
+  SET_USER_REQUEST,
+  SET_USER_SUCCESS,
+  SET_USER_ERROR,
   CREATE_USER_REQUEST,
   CREATE_USER_SUCCESS,
   CREATE_USER_ERROR,
@@ -24,6 +27,23 @@ type userDataType = {
   password?: string;
   parentUser?: number;
 }
+
+const setUserRequest = () => ({ type: SET_USER_REQUEST });
+const setUserSuccess = (payload: any) => ({ type: SET_USER_SUCCESS, payload });
+const setUserFailure = (message: string) => ({ type: SET_USER_ERROR, message });
+
+export const SetUsers = (data: userDataType[]) => async(dispatch: any) => 
+  new Promise((resolve: any, reject: any) => {
+    dispatch(setUserRequest());
+    if (data) {
+      dispatch(setUserSuccess(data));
+      setDataToSession('users', JSON.stringify(data))
+      resolve(data);
+    } else {
+      dispatch(setUserFailure("Fail to Get User"));
+      reject();
+    }
+  });
 
 const getUserRequest = () => ({ type: GET_USER_REQUEST });
 const getUserSuccess = (payload: any) => ({ type: GET_USER_SUCCESS, payload });

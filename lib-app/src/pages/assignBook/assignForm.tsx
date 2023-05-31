@@ -12,7 +12,6 @@ import { useLocation } from 'react-router-dom';
 interface AssignData {
   id: number;
   name: string;
-  author: string;
   quantity: number;
   bookQty?: number;
   user?: any;
@@ -20,6 +19,7 @@ interface AssignData {
   assignDate: string;
   returnDate?: string;
   status?: string;
+  book?: any;
 }
 interface PropTypes {
   editAssignData?: AssignData;
@@ -49,23 +49,24 @@ export default function AssignForm({editAssignData, addAssign, close}: PropTypes
     onSubmit: async values => {
       addAssign(!editAssignData ? { 
         name: state?.book?.name,
-        author: state?.book?.author,
         quantity: values.bookQty,
         userName: values.userName,
         assignDate: new Date().toString(),
         returnDate: new Date().toString(),
         status: 'assigned',
-        user: values?.user
+        user: values?.user,
+        book: state?.book
       } : {
         id: editAssignData.id,
         ...values,
         name: state?.book?.name,
-        author: state?.book?.author,
         quantity: values.bookQty,
         userName: values.userName,
         assignDate: new Date(),
         returnDate: new Date(),
         status: 'assigned',
+        user: values?.user,
+        book: state?.book
       });
       close();
     },

@@ -8,6 +8,9 @@ import {
   GET_USER_REQUEST,
   GET_USER_SUCCESS,
   GET_USER_ERROR,
+  SET_USER_REQUEST,
+  SET_USER_SUCCESS,
+  SET_USER_ERROR,
 } from "../../constant/constant";
 const initialState = {
   fetching: false,
@@ -20,6 +23,10 @@ const initialState = {
 
 export const User = (state = initialState, action: any) => {
   switch (action.type) {
+    case SET_USER_REQUEST: return { ...state, fetching: true, };
+    case SET_USER_SUCCESS: return { ...state, users: action.payload, fetching: false,};
+    case SET_USER_ERROR: return { ...state, fetching: false, error: action.payload, };
+
     case GET_USER_REQUEST: return { ...state, fetching: true, };
     case GET_USER_SUCCESS: return { ...state, users: action.payload, fetching: false,};
     case GET_USER_ERROR: return { ...state, fetching: false, error: action.payload, };

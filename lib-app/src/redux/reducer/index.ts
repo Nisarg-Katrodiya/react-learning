@@ -3,6 +3,8 @@ import { combineReducers } from 'redux';
 // import storage from 'redux-persist/lib/storage' // defaults to localStorage for web
 
 import { User } from "./User";
+import { Book } from "./Book";
+import { AssignBook } from "./AssignBook";
 
 // const config = {
 //   key: "primary",
@@ -11,6 +13,8 @@ import { User } from "./User";
 
 const state = combineReducers({
   User,
+  Book,
+  AssignBook
 });
 
 export default state;

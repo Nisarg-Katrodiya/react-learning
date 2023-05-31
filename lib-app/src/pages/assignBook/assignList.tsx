@@ -41,12 +41,6 @@ const headCells: readonly HeadCell[] = [
     label: 'Book Name',
   },
   {
-    id: 'author',
-    numeric: false,
-    disablePadding: false,
-    label: 'Author',
-  },
-  {
     id: 'quantity',
     numeric: false,
     disablePadding: false,
@@ -78,8 +72,6 @@ const headCells: readonly HeadCell[] = [
   },
 ];
 
-
-
 export default function EnhancedTable({assignList, setUpdateData, handleDeleteAssign}: any) {
   const [order, setOrder] = React.useState<Order>('asc');
   const [orderBy, setOrderBy] = React.useState<keyof Data>('name');
@@ -108,7 +100,7 @@ export default function EnhancedTable({assignList, setUpdateData, handleDeleteAs
   const handleEditData = (data: Data) => {
     setUpdateData(data)
   }
-  const handleDeleteData = (data: number) => {
+  const handleDeleteData = (data: Data) => {
     handleDeleteAssign(data)
   }
 
@@ -144,7 +136,6 @@ export default function EnhancedTable({assignList, setUpdateData, handleDeleteAs
                     >
                       {row.name}
                     </TableCell>
-                    <TableCell align="left">{row.author}</TableCell>
                     <TableCell align="left">{row.quantity}</TableCell>
                     <TableCell align="left">{row.userName}</TableCell>
                     <TableCell align="left">{row.assignDate}</TableCell>
@@ -154,7 +145,7 @@ export default function EnhancedTable({assignList, setUpdateData, handleDeleteAs
                       <IconButton onClick={() => handleEditData(row)}>
                         <EditIcon />
                       </IconButton>
-                      <IconButton onClick={() => handleDeleteData(row.id)}>
+                      <IconButton onClick={() => handleDeleteData(row)}>
                         <DeleteIcon />
                       </IconButton>
                     </TableCell>

@@ -3,6 +3,11 @@ import {Button, Stack, Box, Modal, Typography, AppBar} from '@mui/material';
 import AssignedAssignTable from './assignList';
 import AssignForm from './assignForm';
 import styles from './style';
+import {useDispatch, useSelector} from 'react-redux';
+import {TypedDispatch} from '../../redux/store/store';
+import { SetAssignBooks } from '../../redux/action/assignBook';
+import { SetBooks } from '../../redux/action/book';
+
 // import { useLocation } from 'react-router-dom';
 
 interface AssignData {
@@ -10,35 +15,71 @@ interface AssignData {
   name: string;
   author: string;
   quantity: number;
+  user?: any;
+  book?: any;
   userName: string;
   assignDate: string;
   returnDate?: string;
   status?: string;
 }
-const rows: AssignData[] = [
-  {id: 1, name: 'Dummy book1', author: 'author X', quantity: 2, userName: 'Dummy User1', assignDate: '0998973815', returnDate: '826726745678', status: 'assigned'},
-  {id: 2, name: 'Dummy book2', author: 'author Y', quantity: 1 , userName: 'Dummy user2', assignDate: '0998973815', returnDate: '826726745678', status: 'return'},
-];
+interface BookData {
+  id?: number;
+  image?: any;
+  name: string;
+  author: string;
+  quantity: number;
+  price: number;
+  isbn: string;
+}
 
 function Assign() {
+
+  const dispatch = useDispatch<TypedDispatch>();
+  const {assignBooks} = useSelector((state: any) => state.AssignBook);
+  const {books} = useSelector((state: any) => state.Book);
+
   // const {state} = useLocation();
-  const [assignList, setAssignList] = useState<AssignData[]>(rows);
+  const [assignList, setAssignList] = useState<AssignData[]>(assignBooks);
   const [assignEdit, setEditAssign] = useState<AssignData>();
   const [open, setOpen] = useState(false);
   const handleModel = () => setOpen((prev => !prev));
-  const handleAssignBook = (val: AssignData) => {
+
+  const handleAssignBook = async (val: AssignData) => {
     if(val.id){
       const index = assignList.findIndex(data => data.id === val.id);
       assignList.splice(index, 1, val);
       setAssignList(assignList);
+      await dispatch(SetAssignBooks(assignList));
     } else {
       const newAssign = [...assignList, {...val, id: assignList.length + 1}]
       setAssignList(newAssign);
+      await dispatch(SetAssignBooks(newAssign));
+      // Update Book count
+      const updatedBookList = books.map((book: BookData) => {
+        if(book.id === val.book.id){
+          return {...book, quantity: book.quantity - val.quantity}
+        } else {
+          return book;
+        }
+      })
+      await dispatch(SetBooks(updatedBookList));
     }
     setEditAssign(undefined);
   }
-  const handleReturn = (val: number) => 
-    setAssignList((prev: AssignData[]) => prev.filter((data: AssignData) => data.id !== val));
+  const handleReturn = async (val: AssignData) => {
+    const updatedUsersList = assignList.filter((data: AssignData) => data.id !== val.id);
+    setAssignList(updatedUsersList);
+    await dispatch(SetAssignBooks(updatedUsersList));
+    // Update Book count
+    const updatedBookList = books.map((book: BookData) => {
+      if(book.id === val.book.id){
+        return {...book, quantity: book.quantity + val.quantity}
+      } else {
+        return book;
+      }
+    })
+    await dispatch(SetBooks(updatedBookList));
+  }
   const handleEditAssign = (val: AssignData) => {
     setEditAssign(val);
     handleModel();
@@ -51,7 +92,7 @@ function Assign() {
       <AssignedAssignTable 
         assignList={assignList}
         setUpdateData={(val: AssignData) => handleEditAssign(val)}
-        handleDeleteAssign={(id: number) => handleReturn(id)}
+        handleDeleteAssign={(data: AssignData) => handleReturn(data)}
       />
       <Modal
         open={open}

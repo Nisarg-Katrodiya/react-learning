@@ -3,6 +3,9 @@ import {Button, Stack, Box, Modal, Typography, AppBar} from '@mui/material';
 import BookTable from './Books';
 import BookForm from './bookForm';
 import styles from './style';
+import {useDispatch, useSelector} from 'react-redux';
+import {TypedDispatch} from '../../redux/store/store';
+import { SetBooks } from '../../redux/action/book';
 
 interface BookData {
   id?: number;
@@ -13,29 +16,34 @@ interface BookData {
   price: number;
   isbn: string;
 }
-const rows: BookData[] = [
-  {id: 1, name: 'test user', author: 'author X', quantity: 20, price: 200, isbn: '0998973815'},
-  {id: 2, name: 'donut drum', author: 'author Y', quantity: 11, price: 310, isbn: '0998S73915'},
-];
 
 function Book() {
-  const [bookList, setBookList] = useState<BookData[]>(rows);
+
+  const dispatch = useDispatch<TypedDispatch>();
+  const {books} = useSelector((state: any) => state.Book);
+
+  const [bookList, setBookList] = useState<BookData[]>(books);
   const [bookEdit, setEditBook] = useState<BookData>();
   const [open, setOpen] = useState(false);
   const handleModel = () => setOpen((prev => !prev));
-  const handleAddBook = (val: BookData) => {
+  const handleAddBook = async (val: BookData) => {
     if(val.id){
       const index = bookList.findIndex(data => data.id === val.id);
       bookList.splice(index, 1, val);
       setBookList(bookList);
+      await dispatch(SetBooks(bookList));
     } else {
-      const newBook = [...bookList, {...val, id: bookList.length + 1}]
+      const newBook = [...bookList, {...val, id: books.length + 1}]
       setBookList(newBook);
+      await dispatch(SetBooks(newBook));
     }
     setEditBook(undefined);
   }
-  const handleDeleteBook = (val: number) => 
-    setBookList((prev: BookData[]) => prev.filter((data: BookData) => data.id !== val));
+  const handleDeleteBook = async (val: number) => {
+    const updatedBooks = bookList.filter(data => data.id !== val);
+    setBookList(updatedBooks);
+    await dispatch(SetBooks(updatedBooks));
+  }
   const handleEditBook = (val: BookData) => {
     setEditBook(val);
     handleModel();
