@@ -71,7 +71,6 @@ function stableSort<T>(array: readonly T[], comparator: (a: T, b: T) => number) 
   return stabilizedThis.map((el) => el[0]);
 }
 
-
 const headCells: readonly HeadCell[] = [
   {
     id: 'firstName',
