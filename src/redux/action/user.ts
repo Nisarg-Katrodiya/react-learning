@@ -1,4 +1,4 @@
-import { getDataFromSession, setDataToSession } from "../../utils/localstorage";
+import { getDataFromSession } from "../../utils/localstorage";
 import {IUser} from '../../interface/user.interface';
 import {HasError, FetchUsers, GetAllUsers, AddUser, UpdateUser, DeleteUser, DeleteAllUsers} from '../reducer/User';
 
@@ -8,7 +8,6 @@ export const GetUsers = () => async(dispatch: any) =>
     const getUserList = getDataFromSession('users') || [];
     if (getUserList) {
       dispatch(GetAllUsers(getUserList));
-      setDataToSession('users', getUserList);
       resolve(getUserList);
     } else {
       dispatch(HasError("Fail to Get User"));
