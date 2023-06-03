@@ -33,8 +33,8 @@ export default function UserForm({editUserData, addUser, close}: PropTypes) {
         <Grid item xs={12} sm={6}>
           <TextField
             required
-            id="name"
-            name="name"
+            id="firstName"
+            name="firstName"
             label="User Name"
             fullWidth
             variant="standard"
@@ -46,8 +46,8 @@ export default function UserForm({editUserData, addUser, close}: PropTypes) {
         <Grid item xs={12} sm={6}>
           <TextField
             required
-            id="name"
-            name="name"
+            id="lastName"
+            name="lastName"
             label="User Name"
             fullWidth
             variant="standard"
