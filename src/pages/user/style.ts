@@ -35,7 +35,19 @@ const styles = {
   loginStyle: {
     height: '45px',
     backgroundColor : '#f14d54',
-  }
+  },
+  statusTextActive: {
+    borderRadius: '8px',
+    backgroundColor : '#2F7C32',
+    color: '#FFF',
+    textTransform: 'capitalize',
+  },
+  statusTextInActive: {
+    borderRadius: '8px',
+    backgroundColor : '#f14d54',
+    color: '#FFF',
+    textTransform: 'capitalize',
+  },
 }
 
 export default styles;

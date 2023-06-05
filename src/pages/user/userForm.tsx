@@ -4,6 +4,7 @@ import Button from '@mui/material/Button';
 import { useFormik } from "formik";
 import classes from './style';
 import {IUser} from '../../interface/user.interface';
+import {v4 as uuid} from 'uuid';
 
 interface PropTypes {
   editUserData?: IUser;
@@ -22,7 +23,7 @@ export default function UserForm({editUserData, addUser, close}: PropTypes) {
       status: '',
     },
     onSubmit: async values => {
-      addUser(!editUserData ? values : {...values, id: editUserData.id});
+      addUser(!editUserData ? {...values, id: uuid()} : {...values, id: editUserData.id});
       close();
     },
     // validate: values => validate(values),
@@ -71,7 +72,7 @@ export default function UserForm({editUserData, addUser, close}: PropTypes) {
           />
           {formik.errors.email ? <div>{formik.errors.email}</div> : null}
         </Grid>
-        <Grid item xs={12}>
+        <Grid item xs={12} sm={6}>
           <TextField
             required
             id="phone"

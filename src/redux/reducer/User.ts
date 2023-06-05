@@ -1,4 +1,3 @@
-import {v4 as uuid} from 'uuid';
 import { IUser } from './../../interface/user.interface';
 import {IInitialState} from '../../interface/reducer.interface';
 import { createSlice } from '@reduxjs/toolkit'
@@ -13,13 +12,14 @@ export const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
-    // Has Error
-    HasError(state, action: PayloadAction<string>) {
-      state.error = action.payload;
-    },
     // Loading 
     FetchUsers(state) {
       state.fetching = true;
+    },
+    // Has Error
+    HasError(state, action: PayloadAction<string>) {
+      state.fetching = false;
+      state.error = action.payload;
     },
     // Fetch Users
     GetAllUsers(state, action: PayloadAction<IUser[]>) {
@@ -29,7 +29,7 @@ export const userSlice = createSlice({
     // Add User
     AddUser(state, action: PayloadAction<IUser>) {
       state.fetching = false;
-      state.users.push({id: uuid(), ...action.payload});
+      state.users = [...state.users, action.payload];
     },
     // Update User
     UpdateUser(state, action: PayloadAction<IUser[]>) {
@@ -39,7 +39,7 @@ export const userSlice = createSlice({
     // delete User
     DeleteUser(state, action: PayloadAction<IUser>) {
       state.fetching = false;
-      const updatedUserList: IUser[] = state.users?.filter((user: IUser) => user.email !== action.payload.email);
+      const updatedUserList: IUser[] = state.users?.filter((user: IUser) => user.id !== action.payload.id);
       state.users = updatedUserList;
     },
     // Clear Users

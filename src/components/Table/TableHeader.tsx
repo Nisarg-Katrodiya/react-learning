@@ -1,72 +1,32 @@
 import * as React from 'react';
-import Box from '@mui/material/Box';
 import TableCell from '@mui/material/TableCell';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import TableSortLabel from '@mui/material/TableSortLabel';
 import Checkbox from '@mui/material/Checkbox';
-import { visuallyHidden } from '@mui/utils';
+import IconButton from '@mui/material/IconButton';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import {IUser, EnhancedTableProps} from '../../interface/user.interface';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import {headCells} from '../../constant/tableCols';
 
-import {IUser, Order, HeadCell} from '../../interface/user.interface';
-
-const headCells: readonly HeadCell[] = [
-  {
-    id: 'firstName',
-    numeric: false,
-    disablePadding: true,
-    label: 'First name',
-    sort: true,
-  },
-  {
-    id: 'lastName',
-    numeric: false,
-    disablePadding: false,
-    label: 'Last name',
-    sort: true,
-  },
-  {
-    id: 'email',
-    numeric: false,
-    disablePadding: false,
-    label: 'Email',
-    sort: true,
-  },
-  {
-    id: 'phone',
-    numeric: false,
-    disablePadding: false,
-    label: 'Phone',
-    sort: true,
-  },
-  {
-    id: 'status',
-    numeric: false,
-    disablePadding: false,
-    label: 'Status',
-    sort: true,
-  },
-  {
-    id: 'action',
-    numeric: false,
-    disablePadding: false,
-    label: 'Action',
-    sort: false,
-  },
-];
-interface EnhancedTableProps {
-  numSelected: number;
-  onRequestSort: (event: React.MouseEvent<unknown>, property: keyof IUser) => void;
-  onSelectAllClick: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  order: Order;
-  orderBy: string;
-  rowCount: number;
-}
-function EnhancedTableHead(props: EnhancedTableProps) {
-  const { onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } =
+function TableHeadComponent(props: EnhancedTableProps) {
+  const { onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort, bulkAction } =
     props;
   const createSortHandler =
     (property: keyof IUser) => (event: React.MouseEvent<unknown>) => {
       onRequestSort(event, property);
+    };
+
+    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+    const open = Boolean(anchorEl);
+    const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+      setAnchorEl(event.currentTarget);
+    };
+    const handleClose = (option: string) => {
+      setAnchorEl(null);
+      bulkAction(option);
     };
 
   return (
@@ -96,17 +56,42 @@ function EnhancedTableHead(props: EnhancedTableProps) {
               onClick={createSortHandler(headCell.id)}
             >
               {headCell.label}
-              {orderBy === headCell.id ? (
-                <Box component="span" sx={visuallyHidden}>
-                  {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
-                </Box>
-              ) : null}
             </TableSortLabel>
           </TableCell>
         ))}
+        <TableCell>
+          <>
+            {"Actions"}
+            <IconButton 
+              aria-label="more"
+              id="long-button"
+              aria-controls={open ? 'long-menu' : undefined}
+              aria-expanded={open ? 'true' : undefined}
+              aria-haspopup="true"
+              onClick={handleClick}
+            >
+              <MoreVertIcon />
+            </IconButton>
+            <Menu
+              id="long-menu"
+              MenuListProps={{
+                'aria-labelledby': 'long-button',
+              }}
+              anchorEl={anchorEl}
+              open={open}
+              onClose={handleClose}
+            >
+              {['active', 'inactive'].map((option) => (
+                <MenuItem key={option} onClick={() => handleClose(option)}>
+                  {option}
+                </MenuItem>
+              ))}
+            </Menu>
+          </>
+        </TableCell>
       </TableRow>
     </TableHead>
   );
 }
 
-export default EnhancedTableHead
+export default TableHeadComponent

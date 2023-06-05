@@ -1,10 +1,22 @@
+import React from 'react';
 import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
-import {EnhancedTableToolbarProps} from '../../interface/user.interface';
+import {Box, TextField, Stack, Typography, Autocomplete, OutlinedInput} from '@mui/material';
+import {EnhancedTableToolbarProps, HeadCell} from '../../interface/user.interface';
+import IconButton from '@mui/material/IconButton';
+import InputAdornment from '@mui/material/InputAdornment';
+import SearchIcon from '@mui/icons-material/Search';
 import { alpha } from '@mui/material/styles';
+import {headCells} from '../../constant/tableCols';
 
 function TableToolbar(props: EnhancedTableToolbarProps) {
-  const { numSelected, title } = props;
+  const { numSelected, searchText, handleSearchText, handleSearchFrom } = props;
+
+  const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
+    handleSearchText(event.target.value);
+  }
+  const handleSearchFor = (_event: React.SyntheticEvent<Element, Event>, value: HeadCell) => {
+    handleSearchFrom(value.id);
+  }
 
   return (
     <Toolbar
@@ -27,16 +39,38 @@ function TableToolbar(props: EnhancedTableToolbarProps) {
           {numSelected} selected
         </Typography>
       ) : (
-        <Typography
-          sx={{ flex: '1 1 100%' }}
-          variant="h6"
-          id="tableTitle"
-          component="div"
-        >
-          {title}
-        </Typography>
+        <Box>
+ 
+          <Stack direction="row" spacing={2}>
+            <Autocomplete
+              sx={{width: '180px'}}
+              options={headCells}
+              defaultValue={headCells[0]}
+              id="clearable"
+              disableClearable
+              onChange={handleSearchFor}
+              renderInput={(params) => (
+                <TextField {...params} variant="outlined" />
+              )}
+            />
+            <OutlinedInput
+              id="searchUser"
+              sx={{width: '280px'}}
+              placeholder='Search here..'
+              value={searchText}
+              onChange={handleSearch}
+              endAdornment={
+                <InputAdornment position="end">
+                  <IconButton>
+                    <SearchIcon/>
+                  </IconButton>
+                </InputAdornment>
+              }
+            />
+          </Stack>
+          
+        </Box>
       )}
-      {/* user search box */}
     </Toolbar>
   );
 }

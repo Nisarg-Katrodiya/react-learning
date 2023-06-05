@@ -5,9 +5,8 @@ import UserForm from './userForm';
 import styles from './style';
 import {useDispatch, useSelector} from 'react-redux';
 import {TypedDispatch} from '../../redux/store/store';
-import { GetUsers, createUser } from '../../redux/action/user';
+import { GetUsers, CreateUser, EditUser, EditBulkUser, RemoveUser } from '../../redux/action/user';
 import {IUser} from '../../interface/user.interface';
-import {v4 as uuid} from 'uuid';
 
 function User() {
 
@@ -18,27 +17,30 @@ function User() {
   }
 
   useEffect(() => {
-   GetUsersList()
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+    GetUsersList()
+   // eslint-disable-next-line react-hooks/exhaustive-deps
+   }, [])
 
-  const [userList, setUserList] = useState<IUser[]>(users);
   const [userEdit, setEditUser] = useState<IUser>();
+  const [column, setColumn] = useState<keyof IUser>('firstName');
+  const [selected, setSelected] = useState<readonly string[]>([]);
   const [open, setOpen] = useState(false);
   const handleModel = () => setOpen((prev => !prev));
   const handleAddUser = async (val: IUser) => {
-    if(val.id){
-      const index = userList.findIndex(data => data.id === val.id);
-      userList.splice(index, 1, val);
-      setUserList(userList);
+    if(userEdit){
+      const index = users.findIndex((data: IUser) => data.id === val.id);
+      const userDataList = [...users]
+      userDataList.splice(index, 1, val);
+      await dispatch(EditUser(val, userDataList));
     } else {
-      setUserList([...userList, {...val, id: uuid()}]);
+      await dispatch(CreateUser(val, users));
     }
     setEditUser(undefined);
-    await dispatch(createUser(val, users));
   }
-  const handleDeleteUser = (val: IUser) => 
-    setUserList((prev: IUser[]) => prev.filter((data: IUser) => data.id !== val.id));
+  const handleDeleteUser = async (val: IUser) => {
+    await dispatch(RemoveUser(val));
+    setSelected([]);
+  }
   const handleEditUser = (val: IUser) => {
     setEditUser(val);
     handleModel();
@@ -48,15 +50,37 @@ function User() {
     handleModel();
   };
 
+  const handleBulkAction = async(val: string, selectedUsers: readonly string[]) => {
+    await dispatch(EditBulkUser(val, selectedUsers, users));
+    setSelected([]);
+  };
+  const handleSearch = async(val: string) => {
+    await dispatch(GetUsers(val, column));
+  };
+  const handleSearchColumn = (val: keyof IUser) => {
+    setColumn(val)
+  };
+
   return (
     <>
-      <Stack direction="row" spacing={2} justifyContent="flex-end" sx={{my: 2}}>
+      <Stack direction="row" spacing={2} justifyContent="space-between" sx={{my: 2}}>
+        <Typography
+          variant="h4"
+          id="tableTitle"
+        >
+          Users
+        </Typography>
         <Button variant="contained" onClick={handleModel}>Create User</Button>
       </Stack>
       <UserTable 
-        userList={userList}
+        userList={users}
         setUpdateData={(val: IUser) => handleEditUser(val)}
         handleDeleteUser={(user: IUser) => handleDeleteUser(user)}
+        handleBulkAction={(val: string, Ids: readonly string[]) => handleBulkAction(val, Ids)}
+        handleSearch={(val: string) => handleSearch(val)}
+        handleSearchColumn={(val: keyof IUser) => handleSearchColumn(val)}
+        selected={selected}
+        setSelected={setSelected}
       />
       <Modal
         open={open}

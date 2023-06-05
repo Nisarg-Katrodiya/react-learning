@@ -2,13 +2,17 @@ import { getDataFromSession, setDataToSession } from "../../utils/localstorage";
 import {IUser} from '../../interface/user.interface';
 import {HasError, FetchUsers, GetAllUsers, AddUser, UpdateUser, DeleteUser, DeleteAllUsers} from '../reducer/User';
 
-export const GetUsers = () => async(dispatch: any) => 
+export const GetUsers = (key?: string, column?: keyof IUser) => async(dispatch: any) => 
   new Promise((resolve: any, reject: any) => {
     dispatch(FetchUsers());
-    const getUserList = getDataFromSession('users') || [];
+    let getUserList: IUser[] = getDataFromSession('users');
+    if(key && column) {
+      getUserList = getUserList.filter((user: IUser) => 
+        user[column].toLowerCase() === key.toLowerCase()
+      );
+    }
     if (getUserList) {
       dispatch(GetAllUsers(getUserList));
-      setDataToSession('users', getUserList);
       resolve(getUserList);
     } else {
       dispatch(HasError("Fail to Get User"));
@@ -16,12 +20,13 @@ export const GetUsers = () => async(dispatch: any) =>
     }
   });
 
-export const createUser = (params: IUser, userList: IUser[]) => async(dispatch: any) => 
+export const CreateUser = (params: IUser, userList: IUser[]) => async(dispatch: any) => 
   new Promise((resolve: any, reject: any) => {
     dispatch(FetchUsers());
-    const index: number = userList?.findIndex((user: IUser) => user.email === params.email);
+    const index: number = userList?.findIndex((user: IUser) => user.id === params.id);
     if (index === -1) {
       dispatch(AddUser(params));
+      setDataToSession('users', JSON.stringify([...userList, params]));
       resolve(params);
     } else {
       dispatch(HasError("Fail to Create User"));
@@ -29,29 +34,33 @@ export const createUser = (params: IUser, userList: IUser[]) => async(dispatch: 
     }
   });
 
-export const editUser = (params: IUser, userList: IUser[]) => async(dispatch: any) => 
+export const EditUser = (params: IUser, userList: IUser[]) => async(dispatch: any) => 
   new Promise((resolve: any, reject: any) => {
     dispatch(FetchUsers());
     const index: number = userList?.findIndex((user: IUser) => user.email === params.email);
-    if (index === -1) {
+    if (index !== -1) {
       userList.splice(index, 1, params);
       dispatch(UpdateUser(userList));
       resolve(userList);
     } else {
-      dispatch(HasError("Fail to Create User"));
+      dispatch(HasError("Fail to Update User"));
       reject();
     }
   });
 
-  export const editBulkUser = (params: IUser, userList: IUser[]) => async(dispatch: any) => 
+  export const EditBulkUser = (key: string, ids: readonly string[], userList: IUser[]) => async(dispatch: any) => 
   new Promise((resolve: any, reject: any) => {
     dispatch(FetchUsers());
-    const index: number = userList?.findIndex((user: IUser) => user.email === params.email);
-    if (index === -1) {
-      dispatch(UpdateUser(userList));
-      resolve(userList);
-    } else {
-      dispatch(HasError("Fail to Create User"));
+    try {
+      const UpdatedUserList = [...userList];
+      ids.map((id: string) => {
+        const index = userList.findIndex((user: IUser) => user?.id === id)
+        UpdatedUserList.splice(index, 1, {...userList[index], status: key})
+      })
+      dispatch(UpdateUser(UpdatedUserList));
+      resolve(UpdatedUserList);
+    } catch(error) {
+      dispatch(HasError("Failed to bulk update users"));
       reject();
     }
   });
