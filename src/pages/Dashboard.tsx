@@ -18,31 +18,31 @@ const Dashboard : FC = () => {
             <ListItemAvatar>
               <ListItemText primary="Name: " />
             </ListItemAvatar>
-            <ListItemText primary={userData.name}/>
+            <ListItemText primary={userData?.name}/>
           </ListItem>
           <ListItem>
             <ListItemAvatar>
               <ListItemText primary="Email: " />
             </ListItemAvatar>
-            <ListItemText primary={userData.email}/>
+            <ListItemText primary={userData?.email}/>
           </ListItem>
           <ListItem>
             <ListItemAvatar>
               <ListItemText primary="Phone: " />
             </ListItemAvatar>
-            <ListItemText primary={userData.number || '-'}/>
+            <ListItemText primary={userData?.number || '-'}/>
           </ListItem>
           <ListItem>
             <ListItemAvatar>
               <ListItemText primary="In care of: " />
             </ListItemAvatar>
-            <ListItemText primary={userData.parentUser || '-'}/>
+            <ListItemText primary={userData?.parentUser || '-'}/>
           </ListItem>
           <ListItem>
             <ListItemAvatar>
               <ListItemText primary="Role: " />
             </ListItemAvatar>
-            <ListItemText primary={userData.role}/>
+            <ListItemText primary={userData?.role}/>
           </ListItem>
         </List>
       </CardContent>

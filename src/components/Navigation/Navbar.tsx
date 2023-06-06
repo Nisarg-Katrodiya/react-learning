@@ -30,7 +30,7 @@ const Navbar: FC = (): ReactElement => {
       let filteredRoute = navRoutes.filter(data => data.type.includes('auth'));
       setRoutes(filteredRoute);
     } else {
-      let filteredRoute = navRoutes.filter(data => data.type.includes(user.role === 'admin' ? 'admin' : 'user')).filter(x => x.path !== window.location.pathname);
+      let filteredRoute = navRoutes.filter(data => data.type.includes(user?.role === 'admin' ? 'admin' : 'user')).filter(x => x.path !== window.location.pathname);
       setRoutes(filteredRoute);
     }
   }

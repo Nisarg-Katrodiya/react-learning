@@ -1,4 +1,4 @@
-import {ReactElement, FC} from "react";
+import {useState, ReactElement, FC} from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
@@ -8,6 +8,7 @@ import {
   Divider,
   InputLabel, TextField,
   Button,
+  Snackbar, Alert
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 
@@ -67,11 +68,18 @@ const Login: FC<any> = (): ReactElement => {
   const dispatch: any = useDispatch();
   const classes = useStyle();
   const navigate = useNavigate();
-
+  const [isSuccess, setIsSuccess] = useState<boolean>(false);
+  const [alert, setAlert] = useState<boolean>(false);
+  const handleClose = () => setAlert(!alert);
+  const handleIsSuccess = (flag: boolean) => setIsSuccess(flag);
   const handleLogin = async(values: authDataType) => {
     validate(values);
-    dispatch(loginUser(values));
-    navigate('/');
+    const response = await dispatch(loginUser(values));
+    if(response) {
+      handleIsSuccess(response.success);
+      handleClose();
+    }
+    if(response.success) navigate('/');
   }
   
   const formik = useFormik({
@@ -84,51 +92,70 @@ const Login: FC<any> = (): ReactElement => {
   });
 
     return (
-      <form onSubmit={formik.handleSubmit}>
-        <Typography variant="h6" sx={{mb: 2}}>
-          Registered Customers
-        </Typography>
-        <Divider />
-        <Typography variant="body2" sx={{mt: 2, mb: 2}}>
-          if you have an account with us, please log in.
-        </Typography>
-        <div className={classes.textInputEmail}>
-          <InputLabel className={classes.inputLabel}>
-            Email Address*
-          </InputLabel>
-          <TextField
-            type='email'
-            name='email'
-            size="small"
-            onChange={formik.handleChange}
-            value={formik.values.email}
-            variant="outlined"
-            className={classes.inputStyle}/>
+      <>
+        <form onSubmit={formik.handleSubmit}>
+          <Typography variant="h6" sx={{mb: 2}}>
+            Registered Customers
+          </Typography>
+          <Divider />
+          <Typography variant="body2" sx={{mt: 2, mb: 2}}>
+            if you have an account with us, please log in.
+          </Typography>
+          <div className={classes.textInputEmail}>
+            <InputLabel className={classes.inputLabel}>
+              Email Address*
+            </InputLabel>
+            <TextField
+              type='email'
+              name='email'
+              size="small"
+              onChange={formik.handleChange}
+              value={formik.values.email}
+              variant="outlined"
+              className={classes.inputStyle}/>
+            {formik.errors.email ? <div>{formik.errors.email}</div> : null}
+          </div>
+          <div>
+            <InputLabel className={classes.inputLabel}>
+              Password*
+            </InputLabel>
+            <TextField
+              type='password'
+              name='password'
+              size="small"
+              onChange={formik.handleChange}
+              value={formik.values.password}
+              variant="outlined"
+              className={classes.inputStyle}/>
+            {formik.errors.password ? <div>{formik.errors.password}</div> : null}
+          </div>
           {formik.errors.email ? <div>{formik.errors.email}</div> : null}
-        </div>
-        <div>
-          <InputLabel className={classes.inputLabel}>
-            Password*
-          </InputLabel>
-          <TextField
-            type='password'
-            name='password'
-            size="small"
-            onChange={formik.handleChange}
-            value={formik.values.password}
-            variant="outlined"
-            className={classes.inputStyle}/>
-          {formik.errors.password ? <div>{formik.errors.password}</div> : null}
-        </div>
-        <div className={classes.buttonSpace}>
-          <Button 
-            variant="contained"
-            type="submit"
-            className={classes.loginStyle}>
-            Login
-          </Button>
-        </div>
-      </form>
+          <div className={classes.buttonSpace}>
+            <Button 
+              variant="contained"
+              type="submit"
+              className={classes.loginStyle}>
+              Login
+            </Button>
+          </div>
+        </form>
+        <Snackbar anchorOrigin={{
+            vertical: 'top',
+            horizontal: 'center',
+          }} 
+          open={alert} autoHideDuration={2000} onClose={handleClose}
+        >
+          {isSuccess ? 
+            <Alert severity="success" sx={{ width: '100%' }}>
+              Logged in!
+            </Alert> 
+            :
+            <Alert severity="error" sx={{ width: '100%' }}>
+              Email or password is wrong!
+            </Alert>
+          }
+        </Snackbar>
+      </>
     );
 };
 

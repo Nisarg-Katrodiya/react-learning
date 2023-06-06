@@ -9,6 +9,7 @@ import {
 import { styled } from '@mui/material/styles';
 import LoginForm from '../components/Login/LoginForm';
 import { getToken } from "../utils/common";
+import { setDefaultData } from "../utils/localstorage";
 
 const Item = styled(Paper)(({ theme }: any) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#FFF',
@@ -18,10 +19,10 @@ const Item = styled(Paper)(({ theme }: any) => ({
 }));
 
 const Login: FC<any> = (): ReactElement => {
-
   const navigate = useNavigate();
 
   useEffect(() => {
+    setDefaultData();
     const token = getToken();
     if(token) {
       navigate('/');

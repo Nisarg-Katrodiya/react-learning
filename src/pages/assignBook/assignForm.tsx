@@ -41,7 +41,10 @@ export default function AssignForm({editAssignData, addAssign, close}: PropTypes
   const {users} = useSelector((state: any) => state.User);
 
   const formik = useFormik({
-    initialValues: editAssignData ? editAssignData : {
+    initialValues: editAssignData ? {
+      ...editAssignData,
+      bookQty: editAssignData.quantity,
+    } : {
       user: '',
       userName: '',
       bookQty: ''
@@ -86,7 +89,7 @@ export default function AssignForm({editAssignData, addAssign, close}: PropTypes
               formik.setFieldValue('user', newValue || '');
               formik.setFieldValue('userName', newValue?.name || '');
             }}
-            value={users.find((user: AssignData) => user.userName === formik.values.userName) || null}
+            value={editAssignData ? editAssignData.user : users.find((user: AssignData) => user.userName === formik.values.userName) || null}
             renderInput={(params) => 
               <TextField 
               {...params} 

@@ -94,15 +94,27 @@ const loginFailure = (message: string) => ({ type: LOGIN_USER_ERROR, message });
 export const loginUser = (params: loginDataType) => async(dispatch: any) => 
   new Promise((resolve: any, reject: any) => {
     dispatch(loginRequest());
-    const getUserList = getDataFromSession('users');
-    const index: number = getUserList.findIndex((user: any) => user.email === params.email && user.password === params.password);
-    if (index > -1) {
-      if(!getUserList[index].token) dispatch(loginFailure("Fail to Login User"));
-      dispatch(loginSuccess(getUserList[index]));
-      setUserSession("eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOnsidXNlcl9mbmFtZSI6IlVzZXIiLCJ1c2VyX2VtYWlsIjoidXNlci50ZXN0MTJAZ21haWwuY29tIn19.JVktU8rU4gH0yTmT0G_XGvPBeoPbr-DwNTd6_R0as8s", getUserList[index])
-      resolve(getUserList[index]);
-    } else {
+    try{
+      const getUserList = getDataFromSession('users');
+      const index: number = getUserList.findIndex((user: any) => user.email === params.email && user.password === params.password);
+      if (index > -1) {
+        if(!getUserList[index].token) dispatch(loginFailure("Fail to Login User"));
+        dispatch(loginSuccess(getUserList[index]));
+        setUserSession("eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOnsidXNlcl9mbmFtZSI6IlVzZXIiLCJ1c2VyX2VtYWlsIjoidXNlci50ZXN0MTJAZ21haWwuY29tIn19.JVktU8rU4gH0yTmT0G_XGvPBeoPbr-DwNTd6_R0as8s", getUserList[index])
+        resolve({
+          success: true,
+          message: "User login success",
+          data: getUserList[index]
+        });
+      } else {
+        dispatch(loginFailure("Fail to Login User"));
+        resolve({
+          success: false,
+          message: "Fail to Login User"
+        });
+      }
+    } catch(error) {
       dispatch(loginFailure("Fail to Login User"));
-      reject();
+      reject(error);
     }
   });

@@ -56,9 +56,9 @@ function User() {
 
   useEffect(() => {
     const userData = getDataFromSession('currentUser');
-    if (userData.role === 'admin') setUserList(users);
-    if (userData.role === 'professor') {
-      const filterUsers = users.filter((data: Data) => data.parentUser === userData.id && data.role === 'student');
+    if (userData?.role === 'admin') setUserList(users);
+    if (userData?.role === 'professor') {
+      const filterUsers = users.filter((data: Data) => data.parentUser === userData?.id && data.role === 'student');
       setUserList(filterUsers);
     }
   }, [users])

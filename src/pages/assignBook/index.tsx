@@ -1,12 +1,13 @@
-import {useState} from 'react';
+import {useState, useEffect} from 'react';
 import {Button, Stack, Box, Modal, Typography, AppBar} from '@mui/material';
 import AssignedAssignTable from './assignList';
 import AssignForm from './assignForm';
 import styles from './style';
 import {useDispatch, useSelector} from 'react-redux';
 import {TypedDispatch} from '../../redux/store/store';
-import { SetAssignBooks } from '../../redux/action/assignBook';
+import { SetAssignBooks, GetAssignBooks } from '../../redux/action/assignBook';
 import { SetBooks } from '../../redux/action/book';
+import { useLocation } from 'react-router-dom';
 
 // import { useLocation } from 'react-router-dom';
 
@@ -33,26 +34,37 @@ interface BookData {
 }
 
 function Assign() {
-
+  const {state} = useLocation();
   const dispatch = useDispatch<TypedDispatch>();
   const {assignBooks} = useSelector((state: any) => state.AssignBook);
   const {books} = useSelector((state: any) => state.Book);
 
   // const {state} = useLocation();
-  const [assignList, setAssignList] = useState<AssignData[]>(assignBooks);
+  const [assignList, setAssignList] = useState<AssignData[]>([]);
   const [assignEdit, setEditAssign] = useState<AssignData>();
   const [open, setOpen] = useState(false);
   const handleModel = () => setOpen((prev => !prev));
 
+  const getFilterList = async () => {
+    const response: AssignData[] = await dispatch(GetAssignBooks(state?.book?.id, assignBooks));
+    setAssignList(response)
+  }
+
+  useEffect(() => {
+    getFilterList();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [assignBooks])
+
   const handleAssignBook = async (val: AssignData) => {
     if(val.id){
-      const index = assignList.findIndex(data => data.id === val.id);
-      assignList.splice(index, 1, val);
-      setAssignList(assignList);
-      await dispatch(SetAssignBooks(assignList));
+      // Update
+      const assignedData = [...assignBooks];
+      const index = assignedData.findIndex(data => data.id === val.id);
+      assignedData.splice(index, 1, val);
+      await dispatch(SetAssignBooks(assignedData));
     } else {
-      const newAssign = [...assignList, {...val, id: assignList.length + 1}]
-      setAssignList(newAssign);
+      // Create
+      const newAssign = [...assignBooks, {...val, id: assignBooks.length + 1}]
       await dispatch(SetAssignBooks(newAssign));
       // Update Book count
       const updatedBookList = books.map((book: BookData) => {

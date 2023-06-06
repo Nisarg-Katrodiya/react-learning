@@ -7,7 +7,7 @@ export const setDefaultData = () => {
     {id: 4, name: 'tike myson', email: 'tikemison@gmail.com', parentUser: 2, number: '9876544210', password: 'User@1234', role: 'professor', status: 'active'},
     {id: 5, name: 'donut drum', email: 'donut.drum@mail.com', parentUser: 1, number: '6543218909', password: 'User@1234', role: 'student', status: 'disable'},
   ]));
-  localStorage.setItem('currentUser', JSON.stringify({id: 2, name: 'test user2', email: 'user.professor@gmail.com', number: '9476543210', password: 'User@1234', role: 'professor', status: 'active'}));
+  // localStorage.setItem('currentUser', JSON.stringify({id: 2, name: 'test user2', email: 'user.professor@gmail.com', number: '9476543210', password: 'User@1234', role: 'professor', status: 'active'}));
 }
 // setDefaultData();
 

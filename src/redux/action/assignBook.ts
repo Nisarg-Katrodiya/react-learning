@@ -11,6 +11,7 @@ interface AssignData {
   quantity: number;
   bookQty?: number;
   user?: any;
+  book?: any;
   userName: string;
   assignDate: string;
   returnDate?: string;
@@ -29,6 +30,16 @@ export const SetAssignBooks = (data: AssignData[]) => async(dispatch: any) =>
       resolve(data);
     } else {
       dispatch(assignBookFailure("Fail to Get Book"));
+      reject();
+    }
+  });
+
+export const GetAssignBooks = (bookId: keyof AssignData, list: AssignData[]) => (): Promise<AssignData[]> => 
+  new Promise((resolve: any, reject: any) => {
+    try {
+      let newAssignList: AssignData[] = list.filter((item: AssignData) => item.book.id === bookId);
+      resolve(newAssignList);
+    } catch(error) {
       reject();
     }
   });

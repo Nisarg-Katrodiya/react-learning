@@ -20,7 +20,7 @@ const MainListItems = () => {
           <ListItemText primary="Dashboard" />
         </ListItemButton>
       </Link>
-      {userData.role !== 'student' ? (
+      {userData?.role !== 'student' ? (
         <Link to={'/users'}>
           <ListItemButton>
             <ListItemIcon>
